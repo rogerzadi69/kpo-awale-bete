@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>KPO - Awale bete</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" data-page-link="home" aria-label="Accueil KPO">
+        <span class="brand-mark">KPO</span>
+        <span>
+          <strong>Awale bete</strong>
+          <small>Version 1</small>
+        </span>
+      </a>
+      <nav class="site-nav" aria-label="Navigation principale">
+        <button class="nav-link active" type="button" data-page-link="home">Accueil</button>
+        <button class="nav-link" type="button" data-page-link="game">Jouer</button>
+        <button class="nav-link" type="button" data-page-link="rules">Regles</button>
+        <button class="nav-link" type="button" data-page-link="author">Auteur</button>
+      </nav>
+    </header>
+
+    <main class="app">
+      <section class="page active home-page" id="home-page">
+        <div class="hero">
+          <div class="hero-copy">
+            <p class="eyebrow">Jeu de strategie bété</p>
+            <h1>KPO, l'awale du pays bété</h1>
+            <p>
+              Une premiere version jouable pour tester, corriger et sauvegarder
+              les regles du KPO pratique notamment a Guiberoua.
+            </p>
+            <div class="hero-actions">
+              <button class="primary-action" type="button" data-page-link="game">Commencer une partie</button>
+              <button class="secondary-action" type="button" data-page-link="rules">Voir les regles</button>
+            </div>
+          </div>
+          <div class="hero-board" aria-hidden="true">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+          </div>
+        </div>
+      </section>
+
+      <section class="page game-page" id="game-page">
+        <section class="scorebar" aria-label="Score des joueurs">
+          <article class="player-card" id="player-2-card">
+            <span class="player-label">Joueur 2</span>
+            <strong><span id="score-2">0</span> captures</strong>
+            <span class="player-total hidden">Bilan: <span id="total-2">24</span></span>
+          </article>
+
+          <div class="turn-panel">
+            <p class="eyebrow">Partie en opposition</p>
+            <h1>Awale bete</h1>
+            <p id="turn-text">Au tour du Joueur 1</p>
+            <p class="result-text hidden" id="result-text"></p>
+            <div class="timer" aria-label="Duree de la partie">
+              <span>Duree</span>
+              <strong id="timer-text">00:00</strong>
+            </div>
+          </div>
+
+          <article class="player-card active" id="player-1-card">
+            <span class="player-label">Joueur 1</span>
+            <strong><span id="score-1">0</span> captures</strong>
+            <span class="player-total hidden">Bilan: <span id="total-1">24</span></span>
+          </article>
+        </section>
+
+        <section class="board-wrap" aria-label="Plateau d'awale">
+          <div class="board" id="board"></div>
+        </section>
+
+        <section class="controls">
+          <button id="reset-button" type="button">Nouvelle partie</button>
+          <button id="draw-button" type="button">Match nul</button>
+          <button id="rules-button" type="button" aria-expanded="false">Regles V1</button>
+        </section>
+
+        <section class="rules quick-rules hidden" id="rules-panel">
+          <h2>Regles appliquees dans cette version</h2>
+          <ul>
+            <li>Le plateau contient 2 rangees de 4 villages.</li>
+            <li>Chaque village commence avec 6 pions.</li>
+            <li>On ne joue jamais un village contenant 1 seul pion.</li>
+            <li>Apres l'ouverture, les captures se font chez l'adversaire.</li>
+            <li>Au bilan final, les pions sont replaces en villages de 6, puis le reste.</li>
+          </ul>
+        </section>
+
+        <section class="game-lower">
+          <section class="log" aria-live="polite">
+            <h2>Journal</h2>
+            <ol id="log-list"></ol>
+          </section>
+
+          <section class="score-history">
+            <div class="section-heading">
+              <h2>Scores en opposition</h2>
+              <button id="clear-history-button" type="button">Effacer</button>
+            </div>
+            <div class="history-grid">
+              <article>
+                <span>Joueur 1</span>
+                <strong id="wins-1">0</strong>
+              </article>
+              <article>
+                <span>Matchs nuls</span>
+                <strong id="draws-count">0</strong>
+              </article>
+              <article>
+                <span>Joueur 2</span>
+                <strong id="wins-2">0</strong>
+              </article>
+            </div>
+            <ol class="match-list" id="match-list"></ol>
+          </section>
+        </section>
+      </section>
+
+      <section class="page rules-page" id="rules-page">
+        <article class="content-panel">
+          <p class="eyebrow">Page des regles</p>
+          <h1>Regles actuelles du KPO</h1>
+          <p>
+            Cette page documente la version de travail du jeu. Les regles seront
+            precisees et corrigees au fur et a mesure des tests.
+          </p>
+          <div class="rules-grid">
+            <section>
+              <h2>Ouverture</h2>
+              <p>Au debut, chaque joueur joue tour a tour chacun de ses 4 villages. La capture commence apres cette phase.</p>
+            </section>
+            <section>
+              <h2>Semaille</h2>
+              <p>La distribution suit le cycle des 8 villages. On ne joue pas un village contenant un seul pion.</p>
+            </section>
+            <section>
+              <h2>Capture</h2>
+              <p>On mange seulement chez l'adversaire, et seulement les villages contenant 2 ou 4 pions selon les regles en cours de validation.</p>
+            </section>
+            <section>
+              <h2>Fin de partie</h2>
+              <p>Si les deux reserves atteignent 14 pions apres l'ouverture, la partie peut etre annulee. Si plus personne ne peut jouer, on fait le bilan reserve + villages.</p>
+            </section>
+          </div>
+        </article>
+      </section>
+
+      <section class="page author-page" id="author-page">
+        <article class="content-panel author-panel">
+          <p class="eyebrow">Informations sur l'auteur</p>
+          <h1>Docteur Frere Zadi Bley Roger</h1>
+          <p>
+            Directeur du College catholique Kirmann d'Abengourou, chercheur en
+            langues, mathematiques et jeux africains, et auteur d'un livre sur
+            l'ecriture bété: <strong>Le Solfege bete</strong>.
+          </p>
+          <p>
+            Le present jeu fait l'objet d'un ouvrage qui sera bientot publie.
+            Le jeu d'Awale en pays bété, notamment a Guiberoua, est tres prise
+            par les anciens et meme par les jeunes gens residant au village.
+          </p>
+          <p>
+            L'auteur souhaite que ce jeu, appele en pays bété <strong>KPO</strong>,
+            soit sauvegarde comme un objet du patrimoine bété legue aux nouvelles
+            generations. Cette version doit etre testee afin d'apporter les
+            correctifs necessaires avant une application telechargeable.
+          </p>
+          <div class="contact-strip">
+            <a href="mailto:doizylet@gmail.com">doizylet@gmail.com</a>
+            <a href="https://wa.me/2250777235355">WhatsApp: 07 77 23 53 55</a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <script src="game.js"></script>
+  </body>
+</html>
