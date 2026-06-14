@@ -143,8 +143,20 @@ function getNextVillage(row, col) {
 }
 
 async function playVillage(row, col) {
-  if (isAnimating || gameOver || row !== currentPlayer || board[row][col] < 2 || !isAllowedByOpening(row, col)) {
+  const fromRemote = arguments[2] === true;
+  if (
+    isAnimating ||
+    gameOver ||
+    row !== currentPlayer ||
+    board[row][col] < 2 ||
+    !isAllowedByOpening(row, col) ||
+    (!fromRemote && window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row))
+  ) {
     return;
+  }
+
+  if (!fromRemote && window.KpoOnline?.isOnline()) {
+    await window.KpoOnline.sendMove(row, col);
   }
 
   isAnimating = true;
@@ -345,7 +357,13 @@ function render() {
       button.className = "village";
       button.dataset.row = String(row);
       button.dataset.col = String(col);
-      button.disabled = isAnimating || gameOver || row !== currentPlayer || seeds < 2 || !isAllowedByOpening(row, col);
+      button.disabled =
+        isAnimating ||
+        gameOver ||
+        row !== currentPlayer ||
+        seeds < 2 ||
+        !isAllowedByOpening(row, col) ||
+        (window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row));
       button.setAttribute("aria-label", `${villageNames[row][col]}, ${seeds} pions`);
 
       if (!button.disabled) {
@@ -573,6 +591,59 @@ function clearMatchHistory() {
   renderMatchHistory();
 }
 
+function getGameState() {
+  return {
+    board,
+    currentPlayer,
+    scores,
+    lastVillage,
+    capturedVillages,
+    openingPlayed,
+    gameOver,
+    gameResult,
+    finalTotals,
+    elapsedSeconds,
+    log: Array.from(logList.querySelectorAll("li")).map((item) => item.textContent),
+  };
+}
+
+function applyGameState(state) {
+  if (!state) return;
+  stopTimer();
+  animationRunId = (animationRunId || 0) + 1;
+  board = state.board.map((row) => [...row]);
+  currentPlayer = state.currentPlayer;
+  scores = [...state.scores];
+  lastVillage = state.lastVillage;
+  capturedVillages = state.capturedVillages || [];
+  openingPlayed = state.openingPlayed.map((row) => [...row]);
+  gameOver = state.gameOver;
+  gameResult = state.gameResult || "";
+  finalTotals = state.finalTotals;
+  elapsedSeconds = state.elapsedSeconds || 0;
+  sowingVillage = null;
+  isAnimating = false;
+  logList.innerHTML = "";
+  [...(state.log || [])].reverse().forEach(addLog);
+  if (!gameOver) {
+    timerStartedAt = Date.now() - elapsedSeconds * 1000;
+    timerInterval = window.setInterval(() => {
+      elapsedSeconds = Math.floor((Date.now() - timerStartedAt) / 1000);
+      timerTextEl.textContent = formatDuration(elapsedSeconds);
+    }, 1000);
+  }
+  render();
+}
+
+async function requestNewGame() {
+  if (window.KpoOnline?.isOnline() && window.KpoOnline.getRole() !== PLAYER_1) {
+    addLog("Seul le Joueur 1 peut relancer une partie en ligne.");
+    return;
+  }
+  newGame();
+  await window.KpoOnline?.broadcastReset(getGameState());
+}
+
 function showPage(pageName) {
   pages.forEach((page) => {
     page.classList.toggle("active", page.id === `${pageName}-page`);
@@ -640,7 +711,7 @@ function playVictorySound() {
   playTone(784, 0.34, 0.12, "sine", 0.52);
 }
 
-resetButton.addEventListener("click", newGame);
+resetButton.addEventListener("click", requestNewGame);
 drawButton.addEventListener("click", declareDraw);
 clearHistoryButton.addEventListener("click", clearMatchHistory);
 rulesButton.addEventListener("click", () => {
@@ -652,5 +723,13 @@ navLinks.forEach((link) => {
     showPage(link.dataset.pageLink);
   });
 });
+
+window.KpoGame = {
+  newGame,
+  render,
+  getState: getGameState,
+  applyState: applyGameState,
+  playRemoteMove: (row, col) => playVillage(row, col, true),
+};
 
 newGame();

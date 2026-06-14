@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>KPO - Awale bete</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
   <body>
     <header class="site-header">
@@ -46,6 +47,30 @@
       </section>
 
       <section class="page game-page" id="game-page">
+        <section class="online-panel" aria-label="Mode de jeu">
+          <div class="mode-switch" role="group" aria-label="Choisir le mode de jeu">
+            <button class="mode-button active" id="local-mode-button" type="button">Meme appareil</button>
+            <button class="mode-button" id="online-mode-button" type="button">A distance</button>
+          </div>
+          <div class="online-lobby hidden" id="online-lobby">
+            <div class="lobby-actions">
+              <button id="create-room-button" type="button">Creer une partie</button>
+              <span>ou</span>
+              <label>
+                <span>Code d'invitation</span>
+                <input id="room-code-input" type="text" maxlength="6" autocomplete="off" placeholder="ABC123">
+              </label>
+              <button id="join-room-button" type="button">Rejoindre</button>
+            </div>
+            <div class="room-status" id="room-status">Choisissez comment commencer.</div>
+            <div class="room-share hidden" id="room-share">
+              <span>Code de la partie</span>
+              <strong id="room-code-text"></strong>
+              <button id="copy-room-button" type="button">Copier le lien</button>
+            </div>
+          </div>
+        </section>
+
         <section class="scorebar" aria-label="Score des joueurs">
           <article class="player-card" id="player-2-card">
             <span class="player-label">Joueur 2</span>
@@ -179,6 +204,8 @@
       </section>
     </main>
 
+    <script src="supabase-config.js"></script>
+    <script src="online.js"></script>
     <script src="game.js"></script>
   </body>
 </html>
