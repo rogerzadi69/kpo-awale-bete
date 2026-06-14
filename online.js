@@ -59,9 +59,9 @@
     }
 
     if (!isConfigured) {
-      setStatus("Supabase doit etre configure avant de jouer a distance.", "error");
+      setStatus("Supabase doit être configuré avant de jouer à distance.", "error");
     } else {
-      setStatus("Creez une partie ou rejoignez un adversaire.");
+      setStatus("Créez une partie ou rejoignez un adversaire.");
     }
     window.KpoGame?.render();
   }
@@ -84,7 +84,7 @@
       .on("broadcast", { event: "join" }, () => {
         if (role === 0) {
           opponentConnected = true;
-          setStatus("Joueur 2 connecte. La partie peut commencer.", "success");
+          setStatus("Joueur 2 connecté. La partie peut commencer.", "success");
           send("state", { state: window.KpoGame?.getState() });
         }
       })
@@ -92,7 +92,7 @@
         if (role === 1 && payload?.state) {
           opponentConnected = true;
           window.KpoGame?.applyState(payload.state);
-          setStatus("Connecte comme Joueur 2.", "success");
+          setStatus("Connecté comme Joueur 2.", "success");
         }
       })
       .on("broadcast", { event: "move" }, ({ payload }) => {
@@ -111,10 +111,10 @@
         getElement("room-share").classList.remove("hidden");
 
         if (role === 0) {
-          setStatus("En attente du Joueur 2...", "waiting");
+          setStatus("En attente du Joueur 2…", "waiting");
           window.KpoGame?.newGame();
         } else {
-          setStatus("Connexion a la partie...", "waiting");
+          setStatus("Connexion à la partie…", "waiting");
           send("join", { role });
         }
         window.KpoGame?.render();
@@ -166,7 +166,7 @@
     getElement("join-room-button").addEventListener("click", () => {
       const code = normalizeCode(getElement("room-code-input").value);
       if (code.length !== 6) {
-        setStatus("Saisissez un code de 6 caracteres.", "error");
+        setStatus("Saisissez un code de 6 caractères.", "error");
         return;
       }
       connect(code, 1);
@@ -176,7 +176,7 @@
     });
     getElement("copy-room-button").addEventListener("click", async () => {
       await navigator.clipboard.writeText(getInviteUrl());
-      setStatus("Lien d'invitation copie.", "success");
+      setStatus("Lien d'invitation copié.", "success");
     });
 
     const invitedCode = normalizeCode(new URL(window.location.href).searchParams.get("room") || "");

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>KPO - Awale bete</title>
+    <title>KPO - Awalé bété</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
@@ -12,14 +12,14 @@
       <a class="brand" href="#home" data-page-link="home" aria-label="Accueil KPO">
         <span class="brand-mark">KPO</span>
         <span>
-          <strong>Awale bete</strong>
+          <strong>Awalé bété</strong>
           <small>Version 1</small>
         </span>
       </a>
       <nav class="site-nav" aria-label="Navigation principale">
         <button class="nav-link active" type="button" data-page-link="home">Accueil</button>
         <button class="nav-link" type="button" data-page-link="game">Jouer</button>
-        <button class="nav-link" type="button" data-page-link="rules">Regles</button>
+        <button class="nav-link" type="button" data-page-link="rules">Règles</button>
         <button class="nav-link" type="button" data-page-link="author">Auteur</button>
       </nav>
     </header>
@@ -28,15 +28,15 @@
       <section class="page active home-page" id="home-page">
         <div class="hero">
           <div class="hero-copy">
-            <p class="eyebrow">Jeu de strategie bété</p>
-            <h1>KPO, l'awale du pays bété</h1>
+            <p class="eyebrow">Jeu de stratégie bété</p>
+            <h1>KPO, l'awalé du pays bété</h1>
             <p>
-              Une premiere version jouable pour tester, corriger et sauvegarder
-              les regles du KPO pratique notamment a Guiberoua.
+              Une première version jouable pour tester, corriger et sauvegarder
+              les règles du KPO pratiqué notamment à Guibéroua.
             </p>
             <div class="hero-actions">
               <button class="primary-action" type="button" data-page-link="game">Commencer une partie</button>
-              <button class="secondary-action" type="button" data-page-link="rules">Voir les regles</button>
+              <button class="secondary-action" type="button" data-page-link="rules">Voir les règles</button>
             </div>
           </div>
           <div class="hero-board" aria-hidden="true">
@@ -49,12 +49,12 @@
       <section class="page game-page" id="game-page">
         <section class="online-panel" aria-label="Mode de jeu">
           <div class="mode-switch" role="group" aria-label="Choisir le mode de jeu">
-            <button class="mode-button active" id="local-mode-button" type="button">Meme appareil</button>
-            <button class="mode-button" id="online-mode-button" type="button">A distance</button>
+            <button class="mode-button active" id="local-mode-button" type="button">Même appareil</button>
+            <button class="mode-button" id="online-mode-button" type="button">À distance</button>
           </div>
           <div class="online-lobby hidden" id="online-lobby">
             <div class="lobby-actions">
-              <button id="create-room-button" type="button">Creer une partie</button>
+              <button id="create-room-button" type="button">Créer une partie</button>
               <span>ou</span>
               <label>
                 <span>Code d'invitation</span>
@@ -75,16 +75,16 @@
           <article class="player-card" id="player-2-card">
             <span class="player-label">Joueur 2</span>
             <strong><span id="score-2">0</span> captures</strong>
-            <span class="player-total hidden">Bilan: <span id="total-2">24</span></span>
+            <span class="player-total hidden">Bilan : <span id="total-2">24</span></span>
           </article>
 
           <div class="turn-panel">
             <p class="eyebrow">Partie en opposition</p>
-            <h1>Awale bete</h1>
+            <h1>Awalé bété</h1>
             <p id="turn-text">Au tour du Joueur 1</p>
             <p class="result-text hidden" id="result-text"></p>
-            <div class="timer" aria-label="Duree de la partie">
-              <span>Duree</span>
+            <div class="timer" aria-label="Durée de la partie">
+              <span>Durée</span>
               <strong id="timer-text">00:00</strong>
             </div>
           </div>
@@ -92,28 +92,31 @@
           <article class="player-card active" id="player-1-card">
             <span class="player-label">Joueur 1</span>
             <strong><span id="score-1">0</span> captures</strong>
-            <span class="player-total hidden">Bilan: <span id="total-1">24</span></span>
+            <span class="player-total hidden">Bilan : <span id="total-1">24</span></span>
           </article>
         </section>
 
-        <section class="board-wrap" aria-label="Plateau d'awale">
+        <section class="board-wrap" aria-label="Plateau d'awalé">
           <div class="board" id="board"></div>
         </section>
 
         <section class="controls">
           <button id="reset-button" type="button">Nouvelle partie</button>
-          <button id="draw-button" type="button">Match nul</button>
-          <button id="rules-button" type="button" aria-expanded="false">Regles V1</button>
+          <button id="rules-button" type="button" aria-expanded="false">Règles V1</button>
         </section>
 
         <section class="rules quick-rules hidden" id="rules-panel">
-          <h2>Regles appliquees dans cette version</h2>
+          <h2>Règles appliquées dans cette version</h2>
           <ul>
-            <li>Le plateau contient 2 rangees de 4 villages.</li>
+            <li>Le plateau contient 2 rangées de 4 villages.</li>
             <li>Chaque village commence avec 6 pions.</li>
             <li>On ne joue jamais un village contenant 1 seul pion.</li>
-            <li>Apres l'ouverture, les captures se font chez l'adversaire.</li>
-            <li>Au bilan final, les pions sont replaces en villages de 6, puis le reste.</li>
+            <li>Pendant l'ouverture, chacun joue une fois ses 4 villages sans capture.</li>
+            <li>La semaille suit un cycle complet de 8 villages.</li>
+            <li>Après l'ouverture, on capture seulement 2 ou 4 pions chez l'adversaire.</li>
+            <li>Un joueur sans village jouable attend que l'adversaire joue.</li>
+            <li>Le match nul à 14 pions dans chaque réserve est détecté automatiquement.</li>
+            <li>Au bilan final, les pions sont replacés en villages de 6, puis le reste.</li>
           </ul>
         </section>
 
@@ -149,28 +152,48 @@
 
       <section class="page rules-page" id="rules-page">
         <article class="content-panel">
-          <p class="eyebrow">Page des regles</p>
-          <h1>Regles actuelles du KPO</h1>
+          <p class="eyebrow">Page des règles</p>
+          <h1>Règles actuelles du KPO</h1>
           <p>
-            Cette page documente la version de travail du jeu. Les regles seront
-            precisees et corrigees au fur et a mesure des tests.
+            Cette page rassemble les règles actuellement appliquées par le jeu.
+            Elles servent de référence pour les tests et les prochaines corrections.
           </p>
           <div class="rules-grid">
             <section>
-              <h2>Ouverture</h2>
-              <p>Au debut, chaque joueur joue tour a tour chacun de ses 4 villages. La capture commence apres cette phase.</p>
+              <h2>Plateau et positions</h2>
+              <p>Le plateau possède deux rangées de quatre villages et deux réserves. Chaque village contient 6 pions au départ. La rangée du Joueur 2 est numérotée 1, 2, 3, 4 de gauche à droite ; celle du Joueur 1 est numérotée 4, 3, 2, 1.</p>
             </section>
             <section>
               <h2>Semaille</h2>
-              <p>La distribution suit le cycle des 8 villages. On ne joue pas un village contenant un seul pion.</p>
+              <p>On vide le village choisi et on sème un pion à la fois dans le village suivant. Le cycle est : J1-P1, J2-P4, J2-P3, J2-P2, J2-P1, J1-P4, J1-P3, J1-P2, puis retour à J1-P1. On ne joue jamais un village contenant un seul pion.</p>
             </section>
             <section>
-              <h2>Capture</h2>
-              <p>On mange seulement chez l'adversaire, et seulement les villages contenant 2 ou 4 pions selon les regles en cours de validation.</p>
+              <h2>Phase d'ouverture</h2>
+              <p>Au début de la partie, chaque joueur doit jouer une fois chacun de ses quatre villages, à tour de rôle. Aucune capture n'est permise pendant cette phase. Les stratégies de capture commencent après l'ouverture.</p>
             </section>
             <section>
-              <h2>Fin de partie</h2>
-              <p>Si les deux reserves atteignent 14 pions apres l'ouverture, la partie peut etre annulee. Si plus personne ne peut jouer, on fait le bilan reserve + villages.</p>
+              <h2>Captures</h2>
+              <p>On capture uniquement chez l'adversaire et jamais dans sa propre rangée. Le dernier village doit contenir exactement 2 ou 4 pions. Les villages voisins contenant 2 ou 4 peuvent aussi être capturés ; un village non capturable bloque la prise au-delà.</p>
+            </section>
+            <section>
+              <h2>Attente et tours</h2>
+              <p>Un joueur ne peut jouer qu'un village de sa rangée contenant au moins 2 pions. S'il n'a aucun village jouable, il attend et l'adversaire continue jusqu'à ce qu'il puisse rejouer. En ligne, chaque personne contrôle uniquement son joueur.</p>
+            </section>
+            <section>
+              <h2>Match nul en cours de partie</h2>
+              <p>Après l'ouverture, les réserves sont surveillées. Lorsque les deux joueurs possèdent chacun au moins 14 pions dans leur réserve, le moteur déclare automatiquement le match nul. Aucun bouton manuel n'est nécessaire.</p>
+            </section>
+            <section>
+              <h2>Fin et bilan</h2>
+              <p>La partie s'arrête lorsque plus aucun joueur ne peut jouer, car un pion seul ne se joue pas. Le bilan de chacun est alors : réserve + pions restants dans ses quatre villages. Les pions sont replacés par groupes de 6, puis le reste dans le village suivant, en commençant par la position 4.</p>
+            </section>
+            <section>
+              <h2>Résultat</h2>
+              <p>Après le replacement du bilan, les deux joueurs ayant au moins 14 pions font match nul. Des bilans égaux donnent également un match nul. Sinon, le joueur ayant le bilan le plus élevé gagne et le jeu affiche « Game Over ».</p>
+            </section>
+            <section>
+              <h2>Jeu à distance</h2>
+              <p>Le créateur du salon devient Joueur 1 et communique le code d'invitation. L'invité rejoint comme Joueur 2. Le plateau, les coups et les changements de tour sont synchronisés en temps réel avec Supabase.</p>
             </section>
           </div>
         </article>
@@ -179,26 +202,26 @@
       <section class="page author-page" id="author-page">
         <article class="content-panel author-panel">
           <p class="eyebrow">Informations sur l'auteur</p>
-          <h1>Docteur Frere Zadi Bley Roger</h1>
+          <h1>Docteur Frère Zadi Bley Roger</h1>
           <p>
-            Directeur du College catholique Kirmann d'Abengourou, chercheur en
-            langues, mathematiques et jeux africains, et auteur d'un livre sur
-            l'ecriture bété: <strong>Le Solfege bete</strong>.
+            Directeur du Collège catholique Kirmann d'Abengourou, chercheur en
+            langues, mathématiques et jeux africains, et auteur d'un livre sur
+            l'écriture bété : <strong>Le Solfège bété</strong>.
           </p>
           <p>
-            Le present jeu fait l'objet d'un ouvrage qui sera bientot publie.
-            Le jeu d'Awale en pays bété, notamment a Guiberoua, est tres prise
-            par les anciens et meme par les jeunes gens residant au village.
+            Le présent jeu fait l'objet d'un ouvrage qui sera bientôt publié.
+            Le jeu d'awalé en pays bété, notamment à Guibéroua, est très prisé
+            par les anciens et même par les jeunes gens résidant au village.
           </p>
           <p>
-            L'auteur souhaite que ce jeu, appele en pays bété <strong>KPO</strong>,
-            soit sauvegarde comme un objet du patrimoine bété legue aux nouvelles
-            generations. Cette version doit etre testee afin d'apporter les
-            correctifs necessaires avant une application telechargeable.
+            L'auteur souhaite que ce jeu, appelé en pays bété <strong>KPO</strong>,
+            soit sauvegardé comme un objet du patrimoine bété légué aux nouvelles
+            générations. Cette version doit être testée afin d'apporter les
+            correctifs nécessaires avant une application téléchargeable.
           </p>
           <div class="contact-strip">
             <a href="mailto:doizylet@gmail.com">doizylet@gmail.com</a>
-            <a href="https://wa.me/2250777235355">WhatsApp: 07 77 23 53 55</a>
+            <a href="https://wa.me/2250777235355">WhatsApp : 07 77 23 53 55</a>
           </div>
         </article>
       </section>

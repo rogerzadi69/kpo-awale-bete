@@ -625,11 +625,7 @@ button {
   margin: 18px 0;
 }
 
-.controls button:nth-child(2) {
-  background: linear-gradient(145deg, #d99b2b, #925f13);
-}
-
-.controls button:nth-child(3) {
+.controls #rules-button {
   background: #fff8ec;
   color: var(--ink);
   border: 1px solid var(--line);

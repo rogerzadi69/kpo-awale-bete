@@ -1,26 +1,29 @@
-# KPO - Awale bete
+# KPO - Awalé bété
 
-Version 1 d'un jeu d'awale pratique en pays bete, appele KPO.
+Version 1 d'un jeu d'awalé pratiqué en pays bété, appelé KPO.
 
 ## Contenu
 
 - Page d'accueil
-- Plateau jouable 2 x 4 avec reserves laterales
+- Plateau jouable 2 x 4 avec réserves latérales
 - Phase d'ouverture
 - Semaille animee avec sons
-- Captures en reserve
-- Chronometre de partie
+- Captures en réserve
+- Chronomètre de partie
 - Historique local des oppositions Joueur 1 / Joueur 2
 - Mode a distance par code d'invitation avec Supabase Realtime
-- Page des regles
+- Page des règles
 - Page d'informations sur l'auteur
 
 ## Auteur
 
-Docteur Frere Zadi Bley Roger  
-Directeur du College catholique Kirmann d'Abengourou  
-Chercheur en langues, mathematiques et jeux africains  
-Auteur de *Le Solfege bete*
+Docteur Frère Zadi Bley Roger
+
+Directeur du Collège catholique Kirmann d'Abengourou
+
+Chercheur en langues, mathématiques et jeux africains
+
+Auteur de *Le Solfège bété*
 
 Contact: doizylet@gmail.com
 

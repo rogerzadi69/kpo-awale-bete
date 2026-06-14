@@ -54,7 +54,6 @@ const player1Card = document.querySelector("#player-1-card");
 const player2Card = document.querySelector("#player-2-card");
 const logList = document.querySelector("#log-list");
 const resetButton = document.querySelector("#reset-button");
-const drawButton = document.querySelector("#draw-button");
 const rulesButton = document.querySelector("#rules-button");
 const rulesPanel = document.querySelector("#rules-panel");
 const clearHistoryButton = document.querySelector("#clear-history-button");
@@ -197,7 +196,7 @@ async function playVillage(row, col) {
     ? `${getPlayerName(currentPlayer)} mange ${captured.total} pion(s).`
     : "Aucune capture.";
 
-  addLog(`${getPlayerName(currentPlayer)} joue ${fromName}. Semaille: ${formatSowingPath(sowingPath)}. Dernier pion dans ${lastName}. ${captureText}`);
+  addLog(`${getPlayerName(currentPlayer)} joue ${fromName}. Semaille : ${formatSowingPath(sowingPath)}. Dernier pion dans ${lastName}. ${captureText}`);
 
   currentPlayer = getOpponent(currentPlayer);
   handleWaitingPlayers();
@@ -263,7 +262,7 @@ function checkEndOfGame() {
   }
 
   if (hasReserveDraw()) {
-    finishGame("Match nul", `Les deux reserves ont atteint au moins 14 pions: ${getPlayerName(PLAYER_1)} ${scores[PLAYER_1]}, ${getPlayerName(PLAYER_2)} ${scores[PLAYER_2]}.`);
+    finishGame("Match nul", `Les deux réserves ont atteint au moins 14 pions : ${getPlayerName(PLAYER_1)} ${scores[PLAYER_1]}, ${getPlayerName(PLAYER_2)} ${scores[PLAYER_2]}.`);
     return;
   }
 
@@ -276,19 +275,6 @@ function hasReserveDraw() {
   return !isOpeningPhase() && scores[PLAYER_1] >= 14 && scores[PLAYER_2] >= 14;
 }
 
-function canDeclareDraw() {
-  return !isAnimating && !gameOver && hasReserveDraw();
-}
-
-function declareDraw() {
-  if (!canDeclareDraw()) {
-    addLog(`Match nul impossible pour le moment: ${getPlayerName(PLAYER_1)} a ${scores[PLAYER_1]} pion(s) en reserve, ${getPlayerName(PLAYER_2)} en a ${scores[PLAYER_2]}.`);
-    return;
-  }
-
-  finishGame("Match nul", `Annulation acceptee: ${getPlayerName(PLAYER_1)} a ${scores[PLAYER_1]} pion(s) en reserve, ${getPlayerName(PLAYER_2)} en a ${scores[PLAYER_2]}.`);
-}
-
 function finishBlockedGame(reason) {
   const total1 = getPlayerTotal(PLAYER_1);
   const total2 = getPlayerTotal(PLAYER_2);
@@ -296,16 +282,16 @@ function finishBlockedGame(reason) {
   placeFinalTotalsInVillages();
 
   if (total1 >= 14 && total2 >= 14) {
-    finishGame("Match nul", `${reason} Bilan replace dans les villages: ${getPlayerName(PLAYER_1)} ${total1}, ${getPlayerName(PLAYER_2)} ${total2}. Les deux joueurs ont au moins 14 pions.`);
+    finishGame("Match nul", `${reason} Bilan replacé dans les villages : ${getPlayerName(PLAYER_1)} ${total1}, ${getPlayerName(PLAYER_2)} ${total2}. Les deux joueurs ont au moins 14 pions.`);
     return;
   }
 
   const winner = total1 === total2 ? null : (total1 > total2 ? PLAYER_1 : PLAYER_2);
 
   if (winner === null) {
-    finishGame("Match nul", `${reason} Bilan replace dans les villages: les deux joueurs totalisent chacun ${total1} pion(s).`);
+    finishGame("Match nul", `${reason} Bilan replacé dans les villages : les deux joueurs totalisent chacun ${total1} pion(s).`);
   } else {
-    finishGame(`${getPlayerName(winner)} a Gagne`, `${reason} Bilan replace dans les villages: ${getPlayerName(PLAYER_1)} ${total1}, ${getPlayerName(PLAYER_2)} ${total2}.`);
+    finishGame(`${getPlayerName(winner)} a gagné`, `${reason} Bilan replacé dans les villages : ${getPlayerName(PLAYER_1)} ${total1}, ${getPlayerName(PLAYER_2)} ${total2}.`);
   }
 }
 
@@ -408,8 +394,6 @@ function render() {
   resultTextEl.textContent = gameResult;
   resultTextEl.classList.toggle("hidden", !gameResult);
   totalEls.forEach((totalEl) => totalEl.classList.toggle("hidden", !gameOver));
-  drawButton.disabled = !canDeclareDraw();
-
   player1Card.classList.toggle("active", !gameOver && currentPlayer === PLAYER_1);
   player2Card.classList.toggle("active", !gameOver && currentPlayer === PLAYER_2);
 }
@@ -451,7 +435,7 @@ function clearLastFlashTimer() {
 
 function getTurnText() {
   if (gameOver) {
-    return "Partie terminee";
+    return "Partie terminée";
   }
 
   if (isOpeningPhase()) {
@@ -473,9 +457,9 @@ function createReserve(player) {
   const captured = scores[player];
   const reserveSide = player === PLAYER_1 ? "bottom" : "top";
   reserve.className = `reserve reserve-${reserveSide}`;
-  reserve.setAttribute("aria-label", `Reserve du ${getPlayerName(player)}, ${captured} pions captures`);
+  reserve.setAttribute("aria-label", `Réserve du ${getPlayerName(player)}, ${captured} pions capturés`);
   reserve.innerHTML = `
-    <span class="reserve-label">Reserve ${player + 1}</span>
+    <span class="reserve-label">Réserve ${player + 1}</span>
     <span class="reserve-count">${captured}</span>
     <span class="reserve-seeds" aria-hidden="true">${renderSeeds(captured)}</span>
   `;
@@ -573,7 +557,7 @@ function renderMatchHistory() {
 
   if (matchHistory.length === 0) {
     const item = document.createElement("li");
-    item.textContent = "Aucune partie terminee pour le moment.";
+    item.textContent = "Aucune partie terminée pour le moment.";
     matchListEl.append(item);
     return;
   }
@@ -712,7 +696,6 @@ function playVictorySound() {
 }
 
 resetButton.addEventListener("click", requestNewGame);
-drawButton.addEventListener("click", declareDraw);
 clearHistoryButton.addEventListener("click", clearMatchHistory);
 rulesButton.addEventListener("click", () => {
   const isHidden = rulesPanel.classList.toggle("hidden");
