@@ -49,11 +49,13 @@
     mode = nextMode;
     getElement("local-mode-button").classList.toggle("active", mode === "local");
     getElement("online-mode-button").classList.toggle("active", mode === "online");
+    getElement("computer-mode-button").classList.toggle("active", mode === "computer");
     getElement("online-lobby").classList.toggle("hidden", mode !== "online");
 
-    if (mode === "local") {
+    if (mode === "local" || mode === "computer") {
       await leaveRoom();
-      setStatus("Mode local actif.");
+      setStatus(mode === "computer" ? "Mode contre l'ordinateur actif." : "Mode local actif.");
+      window.KpoGame?.setMode(mode);
       window.KpoGame?.newGame();
       return;
     }
@@ -63,6 +65,7 @@
     } else {
       setStatus("Créez une partie ou rejoignez un adversaire.");
     }
+    window.KpoGame?.setMode("online");
     window.KpoGame?.render();
   }
 
@@ -162,6 +165,7 @@
   window.addEventListener("DOMContentLoaded", () => {
     getElement("local-mode-button").addEventListener("click", () => setMode("local"));
     getElement("online-mode-button").addEventListener("click", () => setMode("online"));
+    getElement("computer-mode-button").addEventListener("click", () => setMode("computer"));
     getElement("create-room-button").addEventListener("click", () => connect(createCode(), 0));
     getElement("join-room-button").addEventListener("click", () => {
       const code = normalizeCode(getElement("room-code-input").value);

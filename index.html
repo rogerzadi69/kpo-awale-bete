@@ -51,6 +51,7 @@
           <div class="mode-switch" role="group" aria-label="Choisir le mode de jeu">
             <button class="mode-button active" id="local-mode-button" type="button">Même appareil</button>
             <button class="mode-button" id="online-mode-button" type="button">À distance</button>
+            <button class="mode-button" id="computer-mode-button" type="button">Contre l'ordinateur</button>
           </div>
           <div class="online-lobby hidden" id="online-lobby">
             <div class="lobby-actions">
@@ -74,6 +75,7 @@
         <section class="scorebar" aria-label="Score des joueurs">
           <article class="player-card" id="player-2-card">
             <span class="player-label">Joueur 2</span>
+            <span class="player-role hidden" id="computer-role-label">Ordinateur</span>
             <strong><span id="score-2">0</span> captures</strong>
             <span class="player-total hidden">Bilan : <span id="total-2">24</span></span>
           </article>
@@ -115,6 +117,7 @@
             <li>La semaille suit un cycle complet de 8 villages.</li>
             <li>Après l'ouverture, on capture seulement 2 ou 4 pions chez l'adversaire.</li>
             <li>Un joueur sans village jouable attend que l'adversaire joue.</li>
+            <li>Le mode contre l'ordinateur fait jouer le Joueur 2 automatiquement.</li>
             <li>Le match nul à 14 pions dans chaque réserve est détecté automatiquement.</li>
             <li>Au bilan final, les pions sont replacés en villages de 6, puis le reste.</li>
           </ul>
@@ -194,6 +197,10 @@
             <section>
               <h2>Jeu à distance</h2>
               <p>Le créateur du salon devient Joueur 1 et communique le code d'invitation. L'invité rejoint comme Joueur 2. Le plateau, les coups et les changements de tour sont synchronisés en temps réel avec Supabase.</p>
+            </section>
+            <section>
+              <h2>Contre l'ordinateur</h2>
+              <p>Le joueur humain contrôle le Joueur 1. L'ordinateur contrôle le Joueur 2, attend brièvement après le coup humain, puis joue un coup légal. Dans cette première version, il privilégie une capture immédiate lorsqu'elle existe.</p>
             </section>
           </div>
         </article>

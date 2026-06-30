@@ -40,6 +40,8 @@ let timerInterval;
 let elapsedSeconds;
 let gameRecorded;
 let matchHistory;
+let gameMode;
+let computerTimer;
 
 const boardEl = document.querySelector("#board");
 const turnTextEl = document.querySelector("#turn-text");
@@ -52,6 +54,7 @@ const totalEls = document.querySelectorAll(".player-total");
 const resultTextEl = document.querySelector("#result-text");
 const player1Card = document.querySelector("#player-1-card");
 const player2Card = document.querySelector("#player-2-card");
+const computerRoleLabel = document.querySelector("#computer-role-label");
 const logList = document.querySelector("#log-list");
 const resetButton = document.querySelector("#reset-button");
 const rulesButton = document.querySelector("#rules-button");
@@ -84,6 +87,7 @@ function newGame() {
   animationRunId = (animationRunId || 0) + 1;
   elapsedSeconds = 0;
   gameRecorded = false;
+  clearComputerTimer();
   logList.innerHTML = "";
   addLog("La partie commence. Chaque village contient 6 pions.");
   startTimer();
@@ -143,13 +147,15 @@ function getNextVillage(row, col) {
 
 async function playVillage(row, col) {
   const fromRemote = arguments[2] === true;
+  const fromComputer = arguments[3] === true;
   if (
     isAnimating ||
     gameOver ||
     row !== currentPlayer ||
     board[row][col] < 2 ||
     !isAllowedByOpening(row, col) ||
-    (!fromRemote && window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row))
+    (!fromRemote && window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row)) ||
+    (!fromComputer && isComputerMode() && row === PLAYER_2)
   ) {
     return;
   }
@@ -203,6 +209,7 @@ async function playVillage(row, col) {
   checkEndOfGame();
   isAnimating = false;
   render();
+  scheduleComputerTurn();
 }
 
 function captureFrom(position, player) {
@@ -349,7 +356,8 @@ function render() {
         row !== currentPlayer ||
         seeds < 2 ||
         !isAllowedByOpening(row, col) ||
-        (window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row));
+        (window.KpoOnline?.isOnline() && !window.KpoOnline.canPlay(row)) ||
+        (isComputerMode() && row === PLAYER_2);
       button.setAttribute("aria-label", `${villageNames[row][col]}, ${seeds} pions`);
 
       if (!button.disabled) {
@@ -396,6 +404,7 @@ function render() {
   totalEls.forEach((totalEl) => totalEl.classList.toggle("hidden", !gameOver));
   player1Card.classList.toggle("active", !gameOver && currentPlayer === PLAYER_1);
   player2Card.classList.toggle("active", !gameOver && currentPlayer === PLAYER_2);
+  computerRoleLabel.classList.toggle("hidden", !isComputerMode());
 }
 
 function appendPositionTags(player) {
@@ -626,6 +635,120 @@ async function requestNewGame() {
   }
   newGame();
   await window.KpoOnline?.broadcastReset(getGameState());
+  scheduleComputerTurn();
+}
+
+function isComputerMode() {
+  return gameMode === "computer";
+}
+
+function setGameMode(mode) {
+  gameMode = mode;
+  clearComputerTimer();
+  render();
+  scheduleComputerTurn();
+}
+
+function scheduleComputerTurn() {
+  clearComputerTimer();
+  if (!isComputerMode() || gameOver || isAnimating || currentPlayer !== PLAYER_2) {
+    return;
+  }
+
+  computerTimer = window.setTimeout(() => {
+    playComputerTurn();
+  }, 900);
+}
+
+function clearComputerTimer() {
+  if (computerTimer) {
+    window.clearTimeout(computerTimer);
+    computerTimer = null;
+  }
+}
+
+function playComputerTurn() {
+  if (!isComputerMode() || gameOver || isAnimating || currentPlayer !== PLAYER_2) {
+    return;
+  }
+
+  const move = chooseComputerMove();
+  if (!move) {
+    handleWaitingPlayers();
+    checkEndOfGame();
+    render();
+    return;
+  }
+
+  addLog(`Ordinateur prépare un coup en position ${getPosition(PLAYER_2, move.col)}.`);
+  playVillage(PLAYER_2, move.col, false, true);
+}
+
+function chooseComputerMove() {
+  const playableCols = getPlayableCols(PLAYER_2);
+  if (playableCols.length === 0) {
+    return null;
+  }
+
+  const scoredMoves = playableCols.map((col) => ({
+    col,
+    score: scoreComputerMove(col),
+  }));
+  scoredMoves.sort((a, b) => b.score - a.score || board[PLAYER_2][b.col] - board[PLAYER_2][a.col]);
+  return scoredMoves[0];
+}
+
+function scoreComputerMove(col) {
+  const simulation = simulateMove(PLAYER_2, col);
+  return simulation.capturedTotal * 10 + simulation.landingSeeds;
+}
+
+function simulateMove(player, col) {
+  const simulatedBoard = board.map((row) => [...row]);
+  let seeds = simulatedBoard[player][col];
+  simulatedBoard[player][col] = 0;
+  let position = { row: player, col };
+
+  while (seeds > 0) {
+    position = getNextVillage(position.row, position.col);
+    simulatedBoard[position.row][position.col] += 1;
+    seeds -= 1;
+  }
+
+  const opponent = getOpponent(player);
+  let capturedTotal = 0;
+  if (!isOpeningPhase() && position.row === opponent) {
+    const capturableCols = collectSimulatedCaptures(simulatedBoard, position);
+    capturedTotal = capturableCols.reduce((total, capturedCol) => total + simulatedBoard[opponent][capturedCol], 0);
+  }
+
+  return {
+    capturedTotal,
+    landingSeeds: simulatedBoard[position.row][position.col],
+  };
+}
+
+function collectSimulatedCaptures(simulatedBoard, origin) {
+  if (!isSimulatedCapturable(simulatedBoard, origin.row, origin.col)) {
+    return [];
+  }
+
+  const cols = [origin.col];
+  for (const direction of [-1, 1]) {
+    let col = origin.col + direction;
+    while (col >= 0 && col < COLS) {
+      if (!isSimulatedCapturable(simulatedBoard, origin.row, col)) {
+        break;
+      }
+      cols.push(col);
+      col += direction;
+    }
+  }
+  return cols;
+}
+
+function isSimulatedCapturable(simulatedBoard, row, col) {
+  return simulatedBoard[row][col] === 2 || simulatedBoard[row][col] === 4;
 }
 
 function showPage(pageName) {
@@ -713,6 +836,8 @@ window.KpoGame = {
   getState: getGameState,
   applyState: applyGameState,
   playRemoteMove: (row, col) => playVillage(row, col, true),
+  setMode: setGameMode,
 };
 
+gameMode = "local";
 newGame();

@@ -345,10 +345,19 @@ button {
 }
 
 .player-label,
+.player-role,
 .player-total {
   color: var(--muted);
   font-size: 0.92rem;
   font-weight: 800;
+}
+
+.player-role {
+  width: fit-content;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #fff7e8;
+  color: var(--green);
 }
 
 .player-card strong {
