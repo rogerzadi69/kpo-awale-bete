@@ -37,3 +37,11 @@ Contact: doizylet@gmail.com
 
 Le mode en ligne utilise un canal Supabase Realtime temporaire. Le createur
 de la partie est Joueur 1. La personne qui saisit le code est Joueur 2.
+
+## Maintenir Supabase actif
+
+Le dépôt contient une tâche GitHub Actions `.github/workflows/keep-supabase-awake.yml`.
+Elle appelle légèrement l'API publique Supabase tous les 3 jours pour garder
+un minimum d'activité sur le projet gratuit.
+
+La tâche peut aussi être lancée manuellement depuis l'onglet `Actions` de GitHub.
