@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Icône KPO">
+  <rect width="512" height="512" rx="112" fill="#2f7054"/>
+  <rect x="62" y="112" width="388" height="288" rx="72" fill="#7a4324"/>
+  <rect x="88" y="138" width="336" height="236" rx="54" fill="#a76535"/>
+  <g fill="#f2d7a4" stroke="#3f2316" stroke-width="12">
+    <circle cx="154" cy="206" r="46"/>
+    <circle cx="256" cy="206" r="46"/>
+    <circle cx="358" cy="206" r="46"/>
+    <circle cx="154" cy="306" r="46"/>
+    <circle cx="256" cy="306" r="46"/>
+    <circle cx="358" cy="306" r="46"/>
+  </g>
+  <text x="256" y="475" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="82" font-weight="900" fill="#fff7e8">KPO</text>
+</svg>

@@ -42,6 +42,7 @@ let gameRecorded;
 let matchHistory;
 let gameMode;
 let computerTimer;
+let deferredInstallPrompt;
 
 const boardEl = document.querySelector("#board");
 const turnTextEl = document.querySelector("#turn-text");
@@ -66,6 +67,7 @@ const drawsCountEl = document.querySelector("#draws-count");
 const matchListEl = document.querySelector("#match-list");
 const navLinks = document.querySelectorAll("[data-page-link]");
 const pages = document.querySelectorAll(".page");
+const installButton = document.querySelector("#install-button");
 
 matchHistory = loadMatchHistory();
 
@@ -761,6 +763,46 @@ function showPage(pageName) {
   });
 }
 
+function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("service-worker.js").catch(() => {
+      addLog("L'installation hors ligne n'a pas pu être préparée pour le moment.");
+    });
+  });
+}
+
+function setupInstallPrompt() {
+  if (!installButton) {
+    return;
+  }
+
+  window.addEventListener("beforeinstallprompt", (event) => {
+    event.preventDefault();
+    deferredInstallPrompt = event;
+    installButton.classList.remove("hidden");
+  });
+
+  installButton.addEventListener("click", async () => {
+    if (!deferredInstallPrompt) {
+      return;
+    }
+
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt = null;
+    installButton.classList.add("hidden");
+  });
+
+  window.addEventListener("appinstalled", () => {
+    deferredInstallPrompt = null;
+    installButton.classList.add("hidden");
+  });
+}
+
 function sleep(milliseconds) {
   return new Promise((resolve) => {
     window.setTimeout(resolve, milliseconds);
@@ -840,4 +882,6 @@ window.KpoGame = {
 };
 
 gameMode = "local";
+registerServiceWorker();
+setupInstallPrompt();
 newGame();
