@@ -2,19 +2,31 @@ name: Keep Supabase Awake
 
 on:
   schedule:
-    - cron: "17 6 */3 * *"
+    - cron: "17 6 */2 * *"
   workflow_dispatch:
 
 jobs:
-  ping:
+  heartbeat:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase public API
+      - name: Update Supabase heartbeat row
         env:
           SUPABASE_URL: https://biewgotuyisdjvqloaqw.supabase.co
-          SUPABASE_PUBLISHABLE_KEY: sb_publishable_2451OGLMsUJz0XBvCcpPeg_yH11sKYW
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           set -euo pipefail
-          curl --fail --silent --show-error \
-            --header "apikey: ${SUPABASE_PUBLISHABLE_KEY}" \
-            "${SUPABASE_URL}/auth/v1/settings" > /dev/null
+
+          if [ -z "${SUPABASE_SERVICE_ROLE_KEY}" ]; then
+            echo "::error::Missing GitHub secret SUPABASE_SERVICE_ROLE_KEY."
+            exit 1
+          fi
+
+          now="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+          curl --fail-with-body --silent --show-error \
+            --request POST \
+            --header "apikey: ${SUPABASE_SERVICE_ROLE_KEY}" \
+            --header "Authorization: Bearer ${SUPABASE_SERVICE_ROLE_KEY}" \
+            --header "Content-Type: application/json" \
+            --header "Prefer: resolution=merge-duplicates,return=representation" \
+            --data "{\"id\":\"main\",\"touched_at\":\"${now}\"}" \
+            "${SUPABASE_URL}/rest/v1/kpo_heartbeat?on_conflict=id"
